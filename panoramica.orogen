@@ -1,0 +1,65 @@
+name "panoramica"
+# Optionally declare the version number
+# version "0.1"
+
+# If new data types need to be defined, they have to be put in a separate C++
+# header, and this header will be loaded here
+import_type_from "base"
+#import_types_from "panoramicaTypes.hpp"
+# Finally, it is pretty common that headers are directly loaded from an external
+# library. In this case, the library must be first used (the name is the
+# library's pkg-config name) and then the header can be used. Following Rock
+# conventions, a common use-case would be:
+#
+# using_library "panoramica"
+# import_types_from "panoramica/CustomType.hpp"
+
+# If this project uses data types that are defined in other oroGen projects,
+# these projects should be imported there as well.
+# import_types_from "base"
+
+# Declare a new task context (i.e., a component)
+#
+# The corresponding C++ class can be edited in tasks/Task.hpp and
+# tasks/Task.cpp, and will be put in the panoramica namespace.
+task_context "Task" do
+    # This is the default from now on, and should not be removed. Rock will
+    # transition to a setup where all components use a configuration step.
+    needs_configuration
+
+    property("cameraPositions", "/std/vector</base/Vector2d>").
+        doc("Camera pan/tilt orientations for pictures, in degrees")
+    property("positionErrorMargin", "double", 0.1).
+    	doc("PanCam pan and tilt position error margin, in degrees")
+    property("frameDelayTimeMs", "int", 100).
+    	doc("Minimum delay in milliseconds before saving a frame after the PanCam reaches its goal position")  
+
+    # Input ports
+    input_port("pan_angle_in", "double").
+        doc("Feedback from the PTU pan angle")
+    input_port("tilt_angle_in", "double").
+        doc("Feedback from the PTU tilt angle")
+    input_port("left_frame_in", ro_ptr('base::samples::frame::Frame')).
+        doc("Input of the left camera of the PTU")
+    input_port("right_frame_in", ro_ptr('base::samples::frame::Frame')).
+        doc("Input of the right camera of the PTU")
+
+    # Output ports
+    output_port("pan_angle_out", "double").
+        doc("PTU pan command")
+    output_port("tilt_angle_out", "double").
+        doc("PTU tilt command")
+    output_port("left_frame_out", ro_ptr('base::samples::frame::Frame')).
+        doc("Output of the left camera of the PTU")
+    output_port("right_frame_out", ro_ptr('base::samples::frame::Frame')).
+        doc("Output of the right camera of the PTU")
+    output_port("pan_angle_out_degrees", "double").
+        doc("PTU pan angle, in degrees")
+    output_port("tilt_angle_out_degrees", "double").
+        doc("PTU tilt angle, in degrees")
+    output_port("set_id", "int").
+        doc("Identification number for all the pictures in a set")
+
+    periodic 0.01
+end
+
