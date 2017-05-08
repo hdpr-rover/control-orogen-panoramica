@@ -4,7 +4,7 @@ name "panoramica"
 
 # If new data types need to be defined, they have to be put in a separate C++
 # header, and this header will be loaded here
-import_type_from "base"
+import_types_from "base"
 #import_types_from "panoramicaTypes.hpp"
 # Finally, it is pretty common that headers are directly loaded from an external
 # library. In this case, the library must be first used (the name is the
