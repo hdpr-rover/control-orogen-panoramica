@@ -43,6 +43,10 @@ task_context "Task" do
         doc("Input of the left camera of the PTU")
     input_port("right_frame_in", ro_ptr('base::samples::frame::Frame')).
         doc("Input of the right camera of the PTU")
+    input_port("trigger_tilt", "double").
+        doc("Triggers the 360 acquisition and gives the tilt angle to use")
+    input_port("sync_in", "int").
+        doc("feedback when images have been processed by dem generation")
 
     # Output ports
     output_port("pan_angle_out", "double").

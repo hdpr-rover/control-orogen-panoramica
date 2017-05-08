@@ -24,13 +24,72 @@ tasks/Task.cpp, and will be put in the panoramica namespace.
      \endverbatim
      *  It can be dynamically adapted when the deployment is called with a prefix argument. 
      */
+     
+     // Button names are in order in which they appear in the vector
+    enum ButtonName
+    {
+        X,
+        A,
+        B,
+        Y,
+        LB,
+        RB,
+        LT,
+        RT,
+        BACK,
+        START,
+        LJOY,
+        RJOY
+    };
+    
+    // Pan-tilt axis names
+    enum Axis
+    {
+        PAN = 0,
+        TILT = 1
+    };
+     
     class Task : public TaskBase
     {
 	friend class TaskBase;
     protected:
+        static const double DEG2RAD = 3.14159/180;
+        // For tilt angles they need to be multiplied by 4 to get them in proper units because of the gearing
+        static const double TILT_MULTIPLIER = 4;
+        
+        // PTU pan and tilt angles from the PTU module (inputs for feedback)
+        double pan_angle_in;
+        double tilt_angle_in;
+        // The tilt angle needs a multiplier, the value is stored in tilt_angle_temp
+        // as tilt_angle_in in keeps getting overwritten for some reason...
+        double tilt_angle_temp;
+        
+        // Position error margin for the pan and tilt positions
+        double position_error_margin;
+        int set_counter;
+        
+        // Vector containing the pan and tilt position for every picture
+        std::vector<base::Vector2d> camera_positions;
+        // Current position index
+        unsigned int position_index;
+        double pan_angle_goal;
+        double tilt_angle_goal;
+        
+        base::Time goal_arrival_time;
+        RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> left_frame, right_frame;
+        
+        base::Time frame_delay_um;
+        bool save_frame;
+        bool left_frame_saved;
+        bool right_frame_saved;
 
-
-
+        // Variables used for Tenerife field test where 360 panorama acquisitions are triggered externally with a fixed tilt angle
+        double trigger_tilt;        
+        int sync;
+        bool triggered;
+        bool processed;
+        bool processing;
+        
     public:
         /** TaskContext constructor for Task
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
