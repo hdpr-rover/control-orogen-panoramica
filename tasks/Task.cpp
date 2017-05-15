@@ -37,6 +37,7 @@ bool Task::configureHook()
     processed = false;
     position_index = 0;
     set_counter = 0;
+    tilt_angle_goal = 0;
     
     position_error_margin = _positionErrorMargin.get() * DEG2RAD;
     frame_delay_um.microseconds = _frameDelayTimeMs.get() * 1000LL;
@@ -80,6 +81,7 @@ void Task::updateHook()
     
     if(_trigger_tilt.read(trigger_tilt) == RTT::NewData){
         triggered=true;
+        _shutter_control.write(false);
     }
  
     if(_sync_in.read(sync) == RTT::NewData){
@@ -131,6 +133,7 @@ void Task::updateHook()
                     position_index = 0;
                     
                     triggered=false;
+                    _shutter_control.write(true);
                     // Change the state to STOPPED
                     //state(STOPPED);
                     // This must be explicitly called to stop the component at low level or there will be issues in ruby
@@ -138,6 +141,9 @@ void Task::updateHook()
                 }
                 else
                 {
+                    //Wait for TM/TC to send the files. Helps the Transformer (in principle).
+                    sleep(1);
+
                     // Picture pair has been taken, proceed to the next position
                     position_index++;
                     

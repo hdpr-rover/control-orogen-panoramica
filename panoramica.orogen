@@ -53,6 +53,8 @@ task_context "Task" do
         doc("PTU pan command")
     output_port("tilt_angle_out", "double").
         doc("PTU tilt command")
+    output_port("shutter_control", "bool").
+        doc("Stop/Start the shutter controller during panorama acquisitions")
     output_port("left_frame_out", ro_ptr('base::samples::frame::Frame')).
         doc("Output of the left camera of the PTU")
     output_port("right_frame_out", ro_ptr('base::samples::frame::Frame')).

@@ -84,7 +84,7 @@ tasks/Task.cpp, and will be put in the panoramica namespace.
         bool right_frame_saved;
 
         // Variables used for Tenerife field test where 360 panorama acquisitions are triggered externally with a fixed tilt angle
-        double trigger_tilt;        
+        double trigger_tilt;
         int sync;
         bool triggered;
         bool processed;
