@@ -81,7 +81,7 @@ void Task::updateHook()
     
     if(_trigger_tilt.read(trigger_tilt) == RTT::NewData){
         triggered=true;
-        _shutter_control.write(false);
+        _shutter_control.write(true); // This stops the shutter controller
     }
  
     if(_sync_in.read(sync) == RTT::NewData){
@@ -133,7 +133,7 @@ void Task::updateHook()
                     position_index = 0;
                     
                     triggered=false;
-                    _shutter_control.write(true);
+                    _shutter_control.write(false); // Restart the shutter controller
                     // Change the state to STOPPED
                     //state(STOPPED);
                     // This must be explicitly called to stop the component at low level or there will be issues in ruby
